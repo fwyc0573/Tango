@@ -1,7 +1,7 @@
 Welcome to Tango, a Harmonious Scheduling Framework for K8s-based Edge-cloud Systems with Mixed Services!
 ==================================
 
-This repository contains the source code for our ICDCS'23 contributed paper "Tango: Harmonious Scheduling for Mixed Services Co-located among Distributed Edge-clouds".
+This repository contains the source code for our ICDCS'23 contributed paper "Tango: Harmonious Scheduling for Mixed Services Co-located among Distributed Edge Clouds".
 
 ## Introduction
 In order to provide interested readers with an intuitive understanding of the Tango scheduling framework, especially the real system part developed in conjunction with K8s, we have opened source the real system part of the code with further simplification (for just indication). Hope this project can provide or inspire a promising and practical solution for harmonious cloud-edge cluster scheduling with mixed services.
