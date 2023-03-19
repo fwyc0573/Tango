@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-deployment-lccpumeo
+  labels:
+    app: service-lccpumeo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-lccpumeo
+  template:
+    metadata:
+      labels:
+        app: service-lccpumeo
+    spec:
+      containers:
+      - name: lccpumeo
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: MY_PORT
+          value: "2501"
+        resources:
+          limits:
+            cpu: "0.00001"
+        securityContext:
+            privileged: true
+        ports:
+        - name: http
+          containerPort: 2501

@@ -1,0 +1,12 @@
+numpy==1.23.1
+pandas==1.4.2
+kubernetes==23.6.0
+ruamel.yaml==0.17.21
+psutil==5.9.1
+gym==0.24.1
+torch==1.11.0
+torch-scatter==2.0.9
+torch-sparse==0.6.13
+torch-cluster==1.6.0
+torch-spline-conv==1.2.1
+torch-geometric==2.0.4

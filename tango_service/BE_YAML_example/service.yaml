@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-deployment-becpumeo
+  labels:
+    app: service-becpumeo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-becpumeo
+  template:
+    metadata:
+      labels:
+        app: service-becpumeo
+    spec:
+      containers:
+      - name: becpumeo
+        imagePullPolicy: IfNotPresent
+        securityContext:
+            privileged: true
+        ports:
+        - name: http
+          containerPort: 2500

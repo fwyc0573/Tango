@@ -1,0 +1,6 @@
+numpy==1.23.1
+pandas==1.4.2
+kubernetes==23.6.0
+ruamel.yaml==0.17.21
+ortools==9.3.10497
+psutil==5.9.1
