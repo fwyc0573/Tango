@@ -9,20 +9,23 @@ import shutil
 import logging
 from config.config_others import NAME, PATH
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 
 def bind_name(v1, pod, node, namespace="default"):
-    target = client.V1ObjectReference(api_version='v1', kind='Node', name=node)
+    target = client.V1ObjectReference(api_version="v1", kind="Node", name=node)
     meta = client.V1ObjectMeta()
     meta.name = pod
     body = client.V1Binding(target=target, metadata=meta)
     try:
         print("INFO Pod: %s placed on: %s\n" % (pod, node))
-        print(pod, ' choose node ', node)
+        print(pod, " choose node ", node)
         api_response = v1.create_namespaced_pod_binding(
-            name=pod, namespace=namespace, body=body)
+            name=pod, namespace=namespace, body=body
+        )
         print(api_response)
         return api_response
     except Exception as e:
@@ -32,11 +35,11 @@ def bind_name(v1, pod, node, namespace="default"):
 def yamlCreat(str_node_index, deploy_type):
     t1 = str(time.time())
     file_path = "/home/" + str(t1) + ".yaml"
-    shutil.copyfile(PATH[deploy_type-1], file_path)
+    shutil.copyfile(PATH[deploy_type - 1], file_path)
 
     node_selector = '"' + str_node_index + '"'
     yaml_selector = "        slave: " + node_selector
-    with open(file_path, 'a') as f:
+    with open(file_path, "a") as f:
         f.write("      nodeSelector:\n")
         f.write(yaml_selector)
     return file_path
@@ -62,25 +65,31 @@ def deploy_with_node(name, deploy_type, nodeName, update_num):
             content = yaml.load(f, Loader=yaml.RoundTripLoader)
             for i in range(update_num):
                 t_time = time.time()
-                record_detailName = name + '-deployment' + str(deploy_type) + '-random' + str(t_time)
-                content['metadata']['name'] = record_detailName
+                record_detailName = (
+                    name + "-deployment" + str(deploy_type) + "-random" + str(t_time)
+                )
+                content["metadata"]["name"] = record_detailName
                 k8s_apps_v1 = client.AppsV1Api()
                 resp = k8s_apps_v1.create_namespaced_deployment(
-                    body=content, namespace="default")
+                    body=content, namespace="default"
+                )
                 logger.info("Deployment created. status='%s'" % resp.metadata.name)
     except Exception as e:
         logger.error("Error, when creating pod：{}".format(e))
         pass
     deployment_time = time.time() - t_start
     os.remove(yaml_path)
-    
+
     has_running = False
     while not has_running:
         for x in check_pod(record_detailName, "", False):
             # print(x)
-            if record_detailName in str(x.name).strip() and str(x.status).strip() == "Running":
+            if (
+                record_detailName in str(x.name).strip()
+                and str(x.status).strip() == "Running"
+            ):
                 return str(x.ip).strip()
-        time.sleep(.05)
+        time.sleep(0.05)
 
 
 def deploy(yaml_path, name, deploy_type):
@@ -88,14 +97,21 @@ def deploy(yaml_path, name, deploy_type):
         t1 = time.time()
         config.load_kube_config()
         v1 = client.CoreV1Api()
-    
+
         with open(yaml_path, encoding="utf-8") as f:
             content = yaml.load(f, Loader=yaml.RoundTripLoader)
             if deploy_type != 0:
-                content['metadata']['name'] = name + '-deployment' + str(deploy_type) + '-random' +  str(time.time())
+                content["metadata"]["name"] = (
+                    name
+                    + "-deployment"
+                    + str(deploy_type)
+                    + "-random"
+                    + str(time.time())
+                )
             k8s_apps_v1 = client.AppsV1Api()
             resp = k8s_apps_v1.create_namespaced_deployment(
-                body=content, namespace="default")
+                body=content, namespace="default"
+            )
             logger.info("Deployment created. status='%s'" % resp.metadata.name)
             logger.info("time:" + str(time.time() - t1))
     except Exception as e:
@@ -107,23 +123,30 @@ def findSubStr_clark(sourceStr, str, i):
     count = 0
     rs = 0
     for c in sourceStr:
-        rs=rs+1
-        if(c==str):
-            count=count+1
-        if(count==i):
+        rs = rs + 1
+        if c == str:
+            count = count + 1
+        if count == i:
             return rs
 
 
-def delete_anyway(service_type, num, target_node = ""):
+def delete_anyway(service_type, num, target_node=""):
     try:
-        deployment_list_str = os.popen("sudo kubectl get deployment | awk '{print $1}' | grep service" + str(service_type)).read()
+        deployment_list_str = os.popen(
+            "sudo kubectl get deployment | awk '{print $1}' | grep service"
+            + str(service_type)
+        ).read()
         deployment_list_str = deployment_list_str.split()
 
         if num == -1:
             for i in range(len(deployment_list_str)):
-                os.popen('sudo kubectl delete deployment ' + deployment_list_str[i] + ' --grace-period=0')
+                os.popen(
+                    "sudo kubectl delete deployment "
+                    + deployment_list_str[i]
+                    + " --grace-period=0"
+                )
         else:
-            service_name = NAME[int(service_type)-1]
+            service_name = NAME[int(service_type) - 1]
 
             pod_list = check_pod(service_name, target_node)
             for each in pod_list:
@@ -133,7 +156,7 @@ def delete_anyway(service_type, num, target_node = ""):
                     whole_pod_name = each.name
                     # print("whole_pod_name:", whole_pod_name)
                     the_third_time_pos = findSubStr_clark(whole_pod_name, "-", 3)
-                    deployment_name = whole_pod_name[0:the_third_time_pos-1]
+                    deployment_name = whole_pod_name[0 : the_third_time_pos - 1]
                     delete(deployment_name)
                     num -= 1
     except Exception as e:
@@ -142,7 +165,9 @@ def delete_anyway(service_type, num, target_node = ""):
 
 def delete(deployment_name):
     try:
-        total_str = os.popen('sudo kubectl delete deployment ' + deployment_name + ' --grace-period=0').read()
+        total_str = os.popen(
+            "sudo kubectl delete deployment " + deployment_name + " --grace-period=0"
+        ).read()
     except Exception as e:
         logger.error("delete：{}".format(e))
 
@@ -151,10 +176,11 @@ def initDeleteAll():
     str_comd = "sudo kubectl get deployment | awk '{print $1}' | grep service | xargs kubectl delete deployment --grace-period=0"
     os.popen(str_comd).read()
 
+
 def initDeployAll():
-    for t in range(0,1):
-        for i in range(0,1):
-            deploy(PATH[i], NAME[i], i+1)
+    for t in range(0, 1):
+        for i in range(0, 1):
+            deploy(PATH[i], NAME[i], i + 1)
 
 
 def init_BE():
@@ -174,9 +200,8 @@ if __name__ == "__main__":
 
     # deploy_with_node(NAME[0], 1, "node83", 3)
     # delete_anyway(1,4)
-    
+
     # initDeleteAll()
     # initDeployAll()
-    
-    # deploy_with_node(PATH[0], NAME[0], 1)
 
+    # deploy_with_node(PATH[0], NAME[0], 1)

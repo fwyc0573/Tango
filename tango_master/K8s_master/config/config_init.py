@@ -10,10 +10,20 @@ import pandas as pd
 from io import StringIO
 import subprocess
 import sys
-sys.path.append("..")
-from deploy import delete, deploy, deploy_with_node, delete_anyway, init_BE, initDeleteAll
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+sys.path.append("..")
+from deploy import (
+    delete,
+    deploy,
+    deploy_with_node,
+    delete_anyway,
+    init_BE,
+    initDeleteAll,
+)
+
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 # Clear all service containers from the last deployment
@@ -29,9 +39,15 @@ logger.info("BE containers have been successfully created...")
 random.seed(0)
 t_sys = time.time()
 
+
 def fetch_edge_master_name():
-    nodes_list = pd.read_csv(StringIO(subprocess.getoutput(
-        'kubectl get node -o wide')), sep='\s{2,}',  engine='python')
-    master_name = nodes_list[nodes_list['ROLES'] == 'master']['NAME'].iloc[0]
+    nodes_list = pd.read_csv(
+        StringIO(subprocess.getoutput("kubectl get node -o wide")),
+        sep="\s{2,}",
+        engine="python",
+    )
+    master_name = nodes_list[nodes_list["ROLES"] == "master"]["NAME"].iloc[0]
     return master_name
+
+
 master_name = fetch_edge_master_name()

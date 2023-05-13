@@ -36,9 +36,9 @@ class ReadWriteLock(object):
 def modify_buff_size():
     SEND_BUF_SIZE = 4096 * 10
     RECV_BUF_SIZE = 4096 * 10
-    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM ) 
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     bufsize = sock.getsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF)
-    sock.setsockopt(socket.SOL_TCP, socket.TCP_NODELAY, 1) 
+    sock.setsockopt(socket.SOL_TCP, socket.TCP_NODELAY, 1)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF, SEND_BUF_SIZE)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, RECV_BUF_SIZE)
     bufsize = sock.getsockopt(socket.SOL_SOCKET, socket.SO_SNDBUF)
@@ -47,11 +47,11 @@ def modify_buff_size():
 def ping(target_ip, num, size):
     num = str(num)
     size = str(size)
-    val = os.popen('ping -c ' + num +  ' -s' + size +  ' '+target_ip).read()
-    index_a = val.find('mdev = ',0)
-    index_b = val.find('/', index_a) + 1
+    val = os.popen("ping -c " + num + " -s" + size + " " + target_ip).read()
+    index_a = val.find("mdev = ", 0)
+    index_b = val.find("/", index_a) + 1
     average_delay = ""
-    while val[index_b] != '/':
+    while val[index_b] != "/":
         average_delay = average_delay + val[index_b]
         index_b = index_b + 1
     average_delay = float(average_delay)
@@ -78,8 +78,8 @@ def nodes_delay():
         return -1
     else:
         return delay
-    
-    
+
+
 def findSubStrIndex(substr, str, time):
     deploy_type = str.count(substr)
     if (deploy_type == 0) or (deploy_type < time):
@@ -87,11 +87,11 @@ def findSubStrIndex(substr, str, time):
     else:
         i, index = 0, -1
         while i < time:
-            index = str.find(substr, index+1)
+            index = str.find(substr, index + 1)
             i += 1
         return index
-    
-    
+
+
 def getPodIDList(pod_list):
     podID_list = []
     for i in pod_list:
@@ -99,7 +99,7 @@ def getPodIDList(pod_list):
         # logger.info("i.name:" + str(i.name))  #"imagerecon-deployment1-random1627279122.4124093-7bbcc6b85fmbqn5"
         pos1 = findSubStrIndex("-", podName, 2)
         pos2 = findSubStrIndex("-", podName, 3)
-        ID = podName[(pos1+7):pos2]
+        ID = podName[(pos1 + 7) : pos2]
         podID_list.append(ID)
     return podID_list
 
@@ -109,8 +109,8 @@ def get_master_ip(nodeName):
         if nodeName in EDGEMASTER_IP_DICTSET[master]["nodeset"]:
             master_ip = EDGEMASTER_IP_DICTSET[master]["IP"]
             return master_ip
-        
-        
+
+
 def get_container_id():
     containerID_list_all = []
     for name in NAME:
@@ -120,23 +120,23 @@ def get_container_id():
             containerID_list_all.append([])
             continue
         for pod in podList:
-           podName = pod.name
-           command = "kubectl describe pod " + podName + " | grep docker://"
-           raw_containerID = os.popen(command).read()
-           raw_containerID = raw_containerID.strip()
-           pos = raw_containerID.find("/")
-           containerID = raw_containerID[pos+2:]
-           containerID_list_eachSerive.append(containerID)
+            podName = pod.name
+            command = "kubectl describe pod " + podName + " | grep docker://"
+            raw_containerID = os.popen(command).read()
+            raw_containerID = raw_containerID.strip()
+            pos = raw_containerID.find("/")
+            containerID = raw_containerID[pos + 2 :]
+            containerID_list_eachSerive.append(containerID)
         containerID_list_all.append(containerID_list_eachSerive)
     return containerID_list_all
 
 
 def changBandWidth(bandwidth):
-    os.popen('wondershaper ens18 ' + str(bandwidth) + ' ' + str(bandwidth)).read()
+    os.popen("wondershaper ens18 " + str(bandwidth) + " " + str(bandwidth)).read()
 
 
 def changDelay(delay):
-    os.popen('tc qdisc change dev eth18 root netem delay' + str(delay) + ' 10ms').read()
+    os.popen("tc qdisc change dev eth18 root netem delay" + str(delay) + " 10ms").read()
 
 
 def name_to_ip(master_name):
@@ -155,5 +155,5 @@ def show_memory_info(hint):
     pid = os.getpid()
     p = psutil.Process(pid)
     info = p.memory_full_info()
-    memory = info.uss/1024./1024
+    memory = info.uss / 1024.0 / 1024
     print(f"{hint} memory used: {memory} MB ")

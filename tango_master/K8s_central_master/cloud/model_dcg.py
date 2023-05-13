@@ -8,11 +8,14 @@ from torch_geometric.data import Data
 from torch_geometric.nn import GCNConv, SAGEConv, GATConv
 from torch_geometric.nn import global_mean_pool, global_max_pool
 from torch_geometric.utils import grid
-GNN_kind = 'graphsage'
+
+GNN_kind = "graphsage"
 
 
-class GNNParser():
-    def __init__(self, nregion, input_size, T=10, grid_h=1, grid_w=1, scale_factor=0.01):
+class GNNParser:
+    def __init__(
+        self, nregion, input_size, T=10, grid_h=1, grid_w=1, scale_factor=0.01
+    ):
         super().__init__()
         self.nregion = nregion
         self.input_size = input_size
@@ -47,7 +50,7 @@ class GNNActor(nn.Module):
     def __init__(self, input_size, hidden_size, output_size):
         super().__init__()
 
-        if GNN_kind == 'graphsage':
+        if GNN_kind == "graphsage":
             self.conv1 = SAGEConv(input_size, 256)
 
         self.lin1 = nn.Linear(256, 128)
@@ -72,7 +75,7 @@ class GNNCritic(nn.Module):
     def __init__(self, input_size, hidden_size, output_size):
         super().__init__()
 
-        if GNN_kind == 'graphsage':
+        if GNN_kind == "graphsage":
             self.conv1 = SAGEConv(input_size, 256)
 
         self.lin1 = nn.Linear(256, 128)
@@ -94,8 +97,14 @@ class A2C(nn.Module):
     Advantage Actor Critic algorithm for the AMoD control problem.
     """
 
-    def __init__(self, nregion, input_size, output_size, eps=np.finfo(np.float32).eps.item(),
-                 device=torch.device("cpu")):
+    def __init__(
+        self,
+        nregion,
+        input_size,
+        output_size,
+        eps=np.finfo(np.float32).eps.item(),
+        device=torch.device("cpu"),
+    ):
         super(A2C, self).__init__()
         self.nregion = nregion
         self.eps = eps
@@ -142,9 +151,11 @@ class A2C(nn.Module):
 
         action = m.sample()
 
-        action, log_prob_action, value = torch.mul(mask_tensor_mul, action), torch.mul(mask_tensor_mul,
-                                                                                       m.log_prob(action)), torch.mul(
-            mask_tensor_mul, value)
+        action, log_prob_action, value = (
+            torch.mul(mask_tensor_mul, action),
+            torch.mul(mask_tensor_mul, m.log_prob(action)),
+            torch.mul(mask_tensor_mul, value),
+        )
         # self.saved_actions.append(SavedAction(m.log_prob(action), value))
         # return list(action.cpu().numpy()), m.log_prob(action), value
         return list(action.cpu().numpy()), log_prob_action, value
@@ -176,46 +187,48 @@ class A2C(nn.Module):
 
             # calculate critic (value) loss using L1 smooth loss
 
-            value_losses.append(F.smooth_l1_loss(value, torch.tensor([R] * 10).to(self.device)))
+            value_losses.append(
+                F.smooth_l1_loss(value, torch.tensor([R] * 10).to(self.device))
+            )
 
         # take gradient steps
         with torch.autograd.set_detect_anomaly(True):
             # self.optimizers['a_optimizer'].zero_grad()
             a_loss = torch.stack(policy_losses).sum()
             a_loss.backward(retain_graph=True)
-            self.optimizers['a_optimizer'].step()
+            self.optimizers["a_optimizer"].step()
 
         # self.optimizers['c_optimizer'].zero_grad()
         v_loss = torch.stack(value_losses).sum()
         with torch.autograd.set_detect_anomaly(True):
             v_loss.backward()
-            self.optimizers['c_optimizer'].step()
+            self.optimizers["c_optimizer"].step()
 
         # reset rewards and action buffer
         del self.rewards[:]
         del self.saved_actions[:]
-        return - a_loss
+        return -a_loss
 
     def configure_optimizers(self):
         optimizers = dict()
         actor_params = list(self.actor.parameters())
         critic_params = list(self.critic.parameters())
-        optimizers['a_optimizer'] = torch.optim.Adam(actor_params, lr=learning_rate)
-        optimizers['c_optimizer'] = torch.optim.Adam(critic_params, lr=learning_rate)
+        optimizers["a_optimizer"] = torch.optim.Adam(actor_params, lr=learning_rate)
+        optimizers["c_optimizer"] = torch.optim.Adam(critic_params, lr=learning_rate)
         return optimizers
 
-    def save_checkpoint(self, path='ckpt.pth'):
+    def save_checkpoint(self, path="ckpt.pth"):
         checkpoint = dict()
-        checkpoint['model'] = self.state_dict()
+        checkpoint["model"] = self.state_dict()
         for key, value in self.optimizers.items():
             checkpoint[key] = value.state_dict()
         torch.save(checkpoint, path)
 
-    def load_checkpoint(self, path='ckpt.pth'):
+    def load_checkpoint(self, path="ckpt.pth"):
         checkpoint = torch.load(path)
-        self.load_state_dict(checkpoint['model'])
+        self.load_state_dict(checkpoint["model"])
         for key, value in self.optimizers.items():
             self.optimizers[key].load_state_dict(checkpoint[key])
 
-    def log(self, log_dict, path='log.pth'):
+    def log(self, log_dict, path="log.pth"):
         torch.save(log_dict, path)

@@ -2,9 +2,11 @@ import psutil
 import multiprocessing
 from multiprocessing import Manager, Queue
 from cloud.central_master import collect_data
+
 # from cloud.cloud import execute
 from cloud.central_master import lc_schedule_orchetra
 from cloud.central_master import collect_tasks_execute_situation_on_each_node
+
 # from cloud.cloud import current_service_on_each_node
 # from cloud.cloud import stuck_tasks_situation_on_each_node
 from cloud.central_master import resources_on_each_node
@@ -27,7 +29,7 @@ from cloud.central_master import task_dict_update
 from cloud.central_master import ALL_SERVICE_LIST
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
 
     share_lock4 = multiprocessing.Lock()
     share_lock5 = multiprocessing.Lock()
@@ -36,12 +38,16 @@ if __name__ == '__main__':
 
     with Manager() as manager:
 
-        manager_resources_on_each_node_dict = manager.dict()  # Information dict about containers
-        manager_resources_on_cluster = manager.dict()  # Information dict of edge clusters
+        manager_resources_on_each_node_dict = (
+            manager.dict()
+        )  # Information dict about containers
+        manager_resources_on_cluster = (
+            manager.dict()
+        )  # Information dict of edge clusters
         mdata = manager.dict()
-        tmp1_dict = manager.dict({'success': 0, 'failure': 0, 'stuck': 0})
+        tmp1_dict = manager.dict({"success": 0, "failure": 0, "stuck": 0})
         mdata["BE"] = tmp1_dict
-        tmp2_dict = manager.dict({'success': 0, 'failure': 0, 'stuck': 0})
+        tmp2_dict = manager.dict({"success": 0, "failure": 0, "stuck": 0})
         mdata["LC"] = tmp2_dict
 
         manager_task_dict = manager.dict()  # Detailed dictionary of requests
@@ -51,7 +57,9 @@ if __name__ == '__main__':
                 manager_task_dict[master][node] = manager.dict()
                 task_lock_dict[node] = {}
                 for service_id in ALL_SERVICE_LIST:
-                    manager_task_dict[master][node][service_id] = manager.dict({'SU': 0, 'F': 0, 'ST': 0})
+                    manager_task_dict[master][node][service_id] = manager.dict(
+                        {"SU": 0, "F": 0, "ST": 0}
+                    )
                     task_lock_dict[node][service_id] = {}
                     task_lock_dict[node][service_id]["SU"] = multiprocessing.Lock()
                     task_lock_dict[node][service_id]["F"] = multiprocessing.Lock()
@@ -62,15 +70,23 @@ if __name__ == '__main__':
             Request processing for all clusters
         """
         collect_tasks_execute_situation_queue = Queue(maxsize=500)
-        p4 = multiprocessing.Process(target=collect_tasks_execute_situation_on_each_node,
-                                     args=(collect_tasks_execute_situation_queue,))
+        p4 = multiprocessing.Process(
+            target=collect_tasks_execute_situation_on_each_node,
+            args=(collect_tasks_execute_situation_queue,),
+        )
         p4.start()
         P = psutil.Process(p4.pid)
         P.cpu_affinity([1, 2])
         for i in range(3):
-            p4 = multiprocessing.Process(target=collect_tasks_execute_situation_on_each_node_excute,
-                                         args=(collect_tasks_execute_situation_queue, task_lock_dict, manager_task_dict,
-                                               manager))
+            p4 = multiprocessing.Process(
+                target=collect_tasks_execute_situation_on_each_node_excute,
+                args=(
+                    collect_tasks_execute_situation_queue,
+                    task_lock_dict,
+                    manager_task_dict,
+                    manager,
+                ),
+            )
             p4.start()
             P = psutil.Process(p4.pid)
             P.cpu_affinity([3, 8])
@@ -88,13 +104,21 @@ if __name__ == '__main__':
             Container Information
         """
         resources_on_each_node_queue = Queue(maxsize=500)
-        p7 = multiprocessing.Process(target=resources_on_each_node, args=(resources_on_each_node_queue,))
+        p7 = multiprocessing.Process(
+            target=resources_on_each_node, args=(resources_on_each_node_queue,)
+        )
         p7.start()
         P = psutil.Process(p7.pid)
         P.cpu_affinity([1, 2])
         for i in range(3):
-            p7 = multiprocessing.Process(target=resources_on_each_node_excute, args=(
-            resources_on_each_node_queue, manager_resources_on_each_node_dict, share_lock4))
+            p7 = multiprocessing.Process(
+                target=resources_on_each_node_excute,
+                args=(
+                    resources_on_each_node_queue,
+                    manager_resources_on_each_node_dict,
+                    share_lock4,
+                ),
+            )
             p7.start()
             P = psutil.Process(p7.pid)
             P.cpu_affinity([3, 8])
@@ -104,13 +128,21 @@ if __name__ == '__main__':
             Edge Cluster Information
         """
         collect_cluster_info_queue = Queue(maxsize=500)
-        p8 = multiprocessing.Process(target=collect_cluster_info, args=(collect_cluster_info_queue,))
+        p8 = multiprocessing.Process(
+            target=collect_cluster_info, args=(collect_cluster_info_queue,)
+        )
         p8.start()
         P = psutil.Process(p8.pid)
         P.cpu_affinity([1, 2])
         for i in range(3):
-            p8 = multiprocessing.Process(target=collect_cluster_info_excute,
-                                         args=(collect_cluster_info_queue, manager_resources_on_cluster, share_lock5))
+            p8 = multiprocessing.Process(
+                target=collect_cluster_info_excute,
+                args=(
+                    collect_cluster_info_queue,
+                    manager_resources_on_cluster,
+                    share_lock5,
+                ),
+            )
             p8.start()
             P = psutil.Process(p8.pid)
             P.cpu_affinity([3, 8])
@@ -141,8 +173,9 @@ if __name__ == '__main__':
         tmp_lock = multiprocessing.Lock()
 
         # Receiving Requests
-        process_receive_request_from_edge = multiprocessing.Process(target=receive_request_from_edge,
-                                                                    args=(cache_queue,))
+        process_receive_request_from_edge = multiprocessing.Process(
+            target=receive_request_from_edge, args=(cache_queue,)
+        )
 
         # Classification Request
         # process_classificate_request_from_edge = multiprocessing.Process(target=classificate_request_from_edge, \
@@ -158,18 +191,25 @@ if __name__ == '__main__':
 
         # Processing Requests
         for i in range(1):
-            process_centralized_scheduling_dispatcher = multiprocessing.Process(target=centralized_scheduling_dispatcher,
-                                                                       args=(cache_queue, edge_queue_dict,
-                                                                             manager_resources_on_cluster,
-                                                                             manager_task_dict,
-                                                                             manager_resources_on_each_node_dict, \
-                                                                             reward_back_queue, tmp_lock))
+            process_centralized_scheduling_dispatcher = multiprocessing.Process(
+                target=centralized_scheduling_dispatcher,
+                args=(
+                    cache_queue,
+                    edge_queue_dict,
+                    manager_resources_on_cluster,
+                    manager_task_dict,
+                    manager_resources_on_each_node_dict,
+                    reward_back_queue,
+                    tmp_lock,
+                ),
+            )
             process_centralized_scheduling_dispatcher.start()
             P = psutil.Process(process_centralized_scheduling_dispatcher.pid)
             P.cpu_affinity([3, 8])
 
-        process_reward_get = multiprocessing.Process(target=task_reward_get,
-                                                     args=(reward_back_queue,))
+        process_reward_get = multiprocessing.Process(
+            target=task_reward_get, args=(reward_back_queue,)
+        )
         process_reward_get.start()
         P = psutil.Process(process_reward_get.pid)
         P.cpu_affinity([1, 2])
@@ -200,8 +240,15 @@ if __name__ == '__main__':
         """
             Data logging
         """
-        p0 = multiprocessing.Process(target=csv_collect_everthing, args=(
-        manager_resources_on_each_node_dict, manager_resources_on_cluster, manager_task_dict, req_load_dict))
+        p0 = multiprocessing.Process(
+            target=csv_collect_everthing,
+            args=(
+                manager_resources_on_each_node_dict,
+                manager_resources_on_cluster,
+                manager_task_dict,
+                req_load_dict,
+            ),
+        )
         p0.start()
         P = psutil.Process(p0.pid)
         P.cpu_affinity([3, 8])
@@ -218,8 +265,13 @@ if __name__ == '__main__':
         P = psutil.Process(p6.pid)
         P.cpu_affinity([1, 2])
         for i in range(1):
-            p6 = multiprocessing.Process(target=collect_tasks_time_write,
-                                         args=(info_queue, tmp_write_lock,))
+            p6 = multiprocessing.Process(
+                target=collect_tasks_time_write,
+                args=(
+                    info_queue,
+                    tmp_write_lock,
+                ),
+            )
             p6.start()
             P = psutil.Process(p6.pid)
             P.cpu_affinity([3, 8])

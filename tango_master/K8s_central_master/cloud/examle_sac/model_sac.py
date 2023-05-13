@@ -6,7 +6,8 @@ import torch.nn.functional as F
 from torch.distributions import Normal
 from torch_geometric.data import Data
 from torch_geometric.nn import GCNConv, SAGEConv, GATConv
-GNN_kind = 'graphsage'
+
+GNN_kind = "graphsage"
 
 LOG_SIG_MAX = 2
 LOG_SIG_MIN = -20
@@ -41,7 +42,7 @@ class QNetwork(nn.Module):
         super(QNetwork, self).__init__()
 
         print("num_inputs:", num_inputs, "num_actions:", num_actions)
-        if GNN_kind == 'graphsage':
+        if GNN_kind == "graphsage":
             self.conv1 = SAGEConv(num_inputs, num_inputs)
 
         # Q1 architecture
@@ -81,11 +82,21 @@ class QNetwork(nn.Module):
         return x1, x2
 
 
-class GNNParser():
+class GNNParser:
     """
     Parser converting raw environment observations to agent inputs (s_t).
     """
-    def __init__(self, nregion, input_size, edge_index, T=10, grid_h=1, grid_w=1, scale_factor=0.01):
+
+    def __init__(
+        self,
+        nregion,
+        input_size,
+        edge_index,
+        T=10,
+        grid_h=1,
+        grid_w=1,
+        scale_factor=0.01,
+    ):
         super().__init__()
         self.nregion = nregion
         self.input_size = input_size
@@ -125,7 +136,7 @@ class GaussianPolicy(nn.Module):
     def __init__(self, num_inputs, num_actions, hidden_dim, action_space=None):
         super(GaussianPolicy, self).__init__()
 
-        if GNN_kind == 'graphsage':
+        if GNN_kind == "graphsage":
             self.conv1 = SAGEConv(num_inputs, num_inputs)
 
         self.linear1 = nn.Linear(num_inputs, hidden_dim)
@@ -138,15 +149,18 @@ class GaussianPolicy(nn.Module):
 
         # action rescaling
         if action_space is None:
-            self.action_scale = torch.tensor(1.)
-            self.action_bias = torch.tensor(0.)
+            self.action_scale = torch.tensor(1.0)
+            self.action_bias = torch.tensor(0.0)
         else:
             self.action_scale = torch.FloatTensor(
-                (action_space.high - action_space.low) / 2.)
+                (action_space.high - action_space.low) / 2.0
+            )
             self.action_bias = torch.FloatTensor(
-                (action_space.high + action_space.low) / 2.)
-            print("action_scale:", self.action_scale, "\naction_bias:", self.action_bias)
-
+                (action_space.high + action_space.low) / 2.0
+            )
+            print(
+                "action_scale:", self.action_scale, "\naction_bias:", self.action_bias
+            )
 
     def forward(self, data_list):
         all_tensor_list = None
@@ -209,13 +223,15 @@ class DeterministicPolicy(nn.Module):
 
         # action rescaling
         if action_space is None:
-            self.action_scale = 1.
-            self.action_bias = 0.
+            self.action_scale = 1.0
+            self.action_bias = 0.0
         else:
             self.action_scale = torch.FloatTensor(
-                (action_space.high - action_space.low) / 2.)
+                (action_space.high - action_space.low) / 2.0
+            )
             self.action_bias = torch.FloatTensor(
-                (action_space.high + action_space.low) / 2.)
+                (action_space.high + action_space.low) / 2.0
+            )
 
     def forward(self, state):
         x = F.relu(self.linear1(state))
@@ -225,10 +241,10 @@ class DeterministicPolicy(nn.Module):
 
     def sample(self, state):
         mean = self.forward(state)
-        noise = self.noise.normal_(0., std=0.1)
+        noise = self.noise.normal_(0.0, std=0.1)
         noise = noise.clamp(-0.25, 0.25)
         action = mean + noise
-        return action, torch.tensor(0.), mean
+        return action, torch.tensor(0.0), mean
 
     def to(self, device):
         self.action_scale = self.action_scale.to(device)

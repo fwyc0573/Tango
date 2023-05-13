@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*- 
+# -*- coding: utf-8 -*-
 import os
 import time
 from kubernetes import client, watch, config
@@ -7,37 +7,38 @@ import re
 import pandas as pd
 from io import StringIO
 import subprocess
+
 # from check_pod import check_pod
 
 
 # /proc/cpuinfo
 def cpuinfo():
-    info = os.popen('cat /proc/cpuinfo').read().split('\n')
+    info = os.popen("cat /proc/cpuinfo").read().split("\n")
     result = {}
     for i in range(len(info)):
-        if info[i].find('\t: ') == -1:
+        if info[i].find("\t: ") == -1:
             continue
-        result[info[i].split('\t: ')[0]] = info[i].split('\t: ')[1]
+        result[info[i].split("\t: ")[0]] = info[i].split("\t: ")[1]
     return result
 
 
 # /proc/meminfo
 def meminfo():
-    info = os.popen('cat /proc/meminfo').read().split('\n')
+    info = os.popen("cat /proc/meminfo").read().split("\n")
     result = {}
     for i in range(len(info)):
-        if info[i].find(':        ') == -1:
+        if info[i].find(":        ") == -1:
             continue
-        result[info[i].split(':        ')[0]] = info[i].split(':        ')[1].strip()
+        result[info[i].split(":        ")[0]] = info[i].split(":        ")[1].strip()
     return result
 
 
 # /proc/uptime
 def uptime():
-    info = os.popen('cat /proc/uptime').read().split(' ')
+    info = os.popen("cat /proc/uptime").read().split(" ")
     result = {}
-    result['run time'] = info[0].strip()
-    result['idle time'] = info[1].strip()
+    result["run time"] = info[0].strip()
+    result["idle time"] = info[1].strip()
     return result
 
 
@@ -55,22 +56,22 @@ def getNodeName():
     config.load_kube_config()
     v1 = client.CoreV1Api()
     nodeList = []
-    
+
     for n in v1.list_node().items:
         if "node" in n.metadata.name:
             nodeName = n.metadata.name
             nodeList.append(nodeName)
     return nodeList
-    
-            
+
+
 # all ready nodes
 def nodes():
     config.load_kube_config()
     v1 = client.CoreV1Api()
     ready_nodes = []
     resource = {}
-    
-    master_name = ''
+
+    master_name = ""
     for n in v1.list_node().items:
         if "master" in n.metadata.name:
             master_name = n.metadata.name
@@ -86,37 +87,48 @@ def nodes():
                     # print(n.metadata.name)
                     # total_str = os.popen('kubectl describe node ' + n.metadata.name).read()
                     # node_info = pd.read_csv(StringIO(subprocess.getoutput(
-                                            # 'kubectl top nodes '+ n.metadata.name)),sep='\s{2,}')
+                    # 'kubectl top nodes '+ n.metadata.name)),sep='\s{2,}')
                     # for index,row in node_info.iterrows()
-                        # cpu_number = row[1][:-1]#166m
-                        # cpu_percent = row[2][:-1]#4%
-                        # memory_number = row[3][:-2]#1646Mi
-                        # memory_percent = row[4][:-1]#8%
+                    # cpu_number = row[1][:-1]#166m
+                    # cpu_percent = row[2][:-1]#4%
+                    # memory_number = row[3][:-2]#1646Mi
+                    # memory_percent = row[4][:-1]#8%
                     # current_resource['memory'] = n.status.allocatable['memory']
                     # current_resource['ephemeral-storage'] = n.status.allocatable['ephemeral-storage']
 
-                    total_str = os.popen('kubectl describe node ' + n.metadata.name).read()
-                    total = re.split('\n', total_str)
+                    total_str = os.popen(
+                        "kubectl describe node " + n.metadata.name
+                    ).read()
+                    total = re.split("\n", total_str)
                     record_line_start = 0
                     for index_line in range(len(total)):
                         if "Allocated resources:" in total[index_line]:
                             record_line_start = index_line
                             break
-                    memory = ' '.join(total[record_line_start+5].split())
+                    memory = " ".join(total[record_line_start + 5].split())
                     # storage = ' '.join(total[-5].split())
                     try:
-                        memory_percent = memory.split(' ')[-3][1:-2]
-                        memory_number = memory.split(' ')[-4][0:-2]
+                        memory_percent = memory.split(" ")[-3][1:-2]
+                        memory_number = memory.split(" ")[-4][0:-2]
                         # storage_percent = storage.split(' ')[-1][1:-2]
                         # storage_number = storage.split(' ')[-2]
-                        current_resource['memory'] = {'percent': memory_percent, 'number': memory_number}
+                        current_resource["memory"] = {
+                            "percent": memory_percent,
+                            "number": memory_number,
+                        }
                         # current_resource['storage'] = {'percent': storage_percent, 'number': storage_number}
                         resource[master_name][n.metadata.name] = current_resource
                         record_data_current_resource = current_resource
                     except Exception as e:
-                        print("checkstatus nodes() error::", e, "BUT FIX TITH REOCRD DATA ")
+                        print(
+                            "checkstatus nodes() error::",
+                            e,
+                            "BUT FIX TITH REOCRD DATA ",
+                        )
                         print("memory:", memory)
-                        resource[master_name][n.metadata.name] = record_data_current_resource
+                        resource[master_name][
+                            n.metadata.name
+                        ] = record_data_current_resource
                 else:
                     pass
     if len(ready_nodes) == 0:
@@ -127,27 +139,27 @@ def nodes():
 
 def check_status():
     result = []
-    with open('./json/cpu_' + str(time.time()) + '.json', 'w') as file_obj:
+    with open("./json/cpu_" + str(time.time()) + ".json", "w") as file_obj:
         cpu = cpuinfo()
         json.dump(cpu, file_obj)
         result.append(cpu)
 
-    with open('./json/mem_' + str(time.time()) + '.json', 'w') as file_obj:
+    with open("./json/mem_" + str(time.time()) + ".json", "w") as file_obj:
         mem = meminfo()
         json.dump(mem, file_obj)
         result.append(mem)
 
-    with open('./json/uptime_' + str(time.time()) + '.json', 'w') as file_obj:
+    with open("./json/uptime_" + str(time.time()) + ".json", "w") as file_obj:
         up_time = uptime()
         json.dump(up_time, file_obj)
         result.append(up_time)
 
-    with open('./json/pod_' + str(time.time()) + '.json', 'w') as file_obj:
+    with open("./json/pod_" + str(time.time()) + ".json", "w") as file_obj:
         pending_pod = pod()
         json.dump(pending_pod, file_obj)
         result.append(pending_pod)
 
-    with open('./json/nodes_' + str(time.time()) + '.json', 'w') as file_obj:
+    with open("./json/nodes_" + str(time.time()) + ".json", "w") as file_obj:
         ready_nodes = nodes()
         json.dump(ready_nodes, file_obj)
         result.append(ready_nodes)
@@ -155,7 +167,7 @@ def check_status():
     return result
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     resource = nodes()
     print(resource)
     # while True:

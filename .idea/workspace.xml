@@ -3,6 +3,32 @@
   <component name="ChangeListManager">
     <list default="true" id="8327ca2a-9409-41f6-957c-1850b2a297e2" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tango_master/K8s_central_master/cloud/central_master.py" beforeDir="false" afterPath="$PROJECT_DIR$/tango_master/K8s_central_master/cloud/central_master.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tango_master/K8s_central_master/cloud/checkPod.py" beforeDir="false" afterPath="$PROJECT_DIR$/tango_master/K8s_central_master/cloud/checkPod.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tango_master/K8s_central_master/cloud/checkStatus.py" beforeDir="false" afterPath="$PROJECT_DIR$/tango_master/K8s_central_master/cloud/checkStatus.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tango_master/K8s_central_master/cloud/config/config_others.py" beforeDir="false" afterPath="$PROJECT_DIR$/tango_master/K8s_central_master/cloud/config/config_others.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tango_master/K8s_central_master/cloud/config/config_port.py" beforeDir="false" afterPath="$PROJECT_DIR$/tango_master/K8s_central_master/cloud/config/config_port.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tango_master/K8s_central_master/cloud/config/config_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/tango_master/K8s_central_master/cloud/config/config_service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tango_master/K8s_central_master/cloud/deploy.py" beforeDir="false" afterPath="$PROJECT_DIR$/tango_master/K8s_central_master/cloud/deploy.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tango_master/K8s_central_master/cloud/examle_sac/model_sac.py" beforeDir="false" afterPath="$PROJECT_DIR$/tango_master/K8s_central_master/cloud/examle_sac/model_sac.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tango_master/K8s_central_master/cloud/examle_sac/sac.py" beforeDir="false" afterPath="$PROJECT_DIR$/tango_master/K8s_central_master/cloud/examle_sac/sac.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tango_master/K8s_central_master/cloud/examle_sac/sac_args.py" beforeDir="false" afterPath="$PROJECT_DIR$/tango_master/K8s_central_master/cloud/examle_sac/sac_args.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tango_master/K8s_central_master/cloud/examle_sac/utils_sac.py" beforeDir="false" afterPath="$PROJECT_DIR$/tango_master/K8s_central_master/cloud/examle_sac/utils_sac.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tango_master/K8s_central_master/cloud/model_dcg.py" beforeDir="false" afterPath="$PROJECT_DIR$/tango_master/K8s_central_master/cloud/model_dcg.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tango_master/K8s_central_master/cloud/replay_memory.py" beforeDir="false" afterPath="$PROJECT_DIR$/tango_master/K8s_central_master/cloud/replay_memory.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tango_master/K8s_central_master/main_central.py" beforeDir="false" afterPath="$PROJECT_DIR$/tango_master/K8s_central_master/main_central.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tango_master/K8s_master/checkPod.py" beforeDir="false" afterPath="$PROJECT_DIR$/tango_master/K8s_master/checkPod.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tango_master/K8s_master/checkStatus.py" beforeDir="false" afterPath="$PROJECT_DIR$/tango_master/K8s_master/checkStatus.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tango_master/K8s_master/config/config_init.py" beforeDir="false" afterPath="$PROJECT_DIR$/tango_master/K8s_master/config/config_init.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tango_master/K8s_master/config/config_others.py" beforeDir="false" afterPath="$PROJECT_DIR$/tango_master/K8s_master/config/config_others.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tango_master/K8s_master/config/config_port.py" beforeDir="false" afterPath="$PROJECT_DIR$/tango_master/K8s_master/config/config_port.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tango_master/K8s_master/config/config_service.py" beforeDir="false" afterPath="$PROJECT_DIR$/tango_master/K8s_master/config/config_service.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tango_master/K8s_master/config/config_switch.py" beforeDir="false" afterPath="$PROJECT_DIR$/tango_master/K8s_master/config/config_switch.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tango_master/K8s_master/config/pack_init/config_pack.py" beforeDir="false" afterPath="$PROJECT_DIR$/tango_master/K8s_master/config/pack_init/config_pack.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tango_master/K8s_master/deploy.py" beforeDir="false" afterPath="$PROJECT_DIR$/tango_master/K8s_master/deploy.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tango_master/K8s_master/init_deploy_lc.py" beforeDir="false" afterPath="$PROJECT_DIR$/tango_master/K8s_master/init_deploy_lc.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tango_master/K8s_master/master_run.py" beforeDir="false" afterPath="$PROJECT_DIR$/tango_master/K8s_master/master_run.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tango_master/K8s_master/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/tango_master/K8s_master/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -21,12 +47,12 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "RunOnceActivity.OpenProjectViewOnStart": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;
   }
-}]]></component>
+}</component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
