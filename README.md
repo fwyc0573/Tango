@@ -2,6 +2,8 @@ Welcome to Tango, a Harmonious Management and Scheduling Framework for K8s-based
 ==================================
 
 ## Introduction
+Yicheng Feng, Shihao Shen, Mengwei Xu, Yuanming Ren, Xiaofei Wang, Victor C.M. Leung, and Wenyu Wang, "Tango: Harmonious Management and Scheduling for Mixed Services Co-located among Distributed Edge-Clouds," in **ACM International Conference on Parallel Processing (ICPP)**, 2023.
+
 Tango is a management and scheduling framework designed to achieve harmonious scheduling in cloud-edge clusters with mixed services. This repository contains the source code of the real system developed in conjunction with K8s, providing a simplified version for demonstration purposes. We hope this project can serve as a practical and promising solution for efficient cloud-edge cluster management and scheduling.
 
 ## Environment config
