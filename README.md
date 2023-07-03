@@ -1,4 +1,4 @@
-Welcome to Tango, a Harmonious Management and Scheduling Framework for K8s-based Edge-cloud Systems with Mixed Services!
+Welcome to Tango, a Harmonious Management and Scheduling Framework for K8s-based Edge-Cloud Systems with Mixed Services!
 ==================================
 
 ## Introduction
