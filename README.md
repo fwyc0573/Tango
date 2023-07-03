@@ -1,11 +1,11 @@
-Welcome to Tango, a Harmonious Scheduling Framework for K8s-based Edge-cloud Systems with Mixed Services!
+Welcome to Tango, a Harmonious Management and Scheduling Framework for K8s-based Edge-cloud Systems with Mixed Services!
 ==================================
 
 ## Introduction
-Tango is a scheduling framework designed to achieve harmonious scheduling in cloud-edge clusters with mixed services. This repository contains the source code of the real system developed in conjunction with K8s, providing a simplified version for demonstration purposes. We hope this project can serve as a practical and promising solution for efficient cloud-edge cluster scheduling.
+Tango is a management and scheduling framework designed to achieve harmonious scheduling in cloud-edge clusters with mixed services. This repository contains the source code of the real system developed in conjunction with K8s, providing a simplified version for demonstration purposes. We hope this project can serve as a practical and promising solution for efficient cloud-edge cluster management and scheduling.
 
 ## Environment config
-- Ubuntu 18.04 with Linux kernel v5.3.0-28
+- Ubuntu 20.04.3LTS with Linux kernel v5.3.0-28
 - python-K8sclient (Python 3.8)
 - K8s-v1.21.0
 - Pytorch 1.11.0
