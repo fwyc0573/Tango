@@ -6,7 +6,7 @@ Yicheng Feng, Shihao Shen, Mengwei Xu, Yuanming Ren, Xiaofei Wang, Victor C.M. L
 
 Tango is a management and scheduling framework designed to achieve harmonious scheduling in cloud-edge clusters with mixed services. This repository contains the source code of the real system developed in conjunction with K8s, providing a simplified version for demonstration purposes. We hope this project can serve as a practical and promising solution for efficient cloud-edge cluster management and scheduling.
 
-## Environment config
+## Environment Config
 - Ubuntu 20.04.3LTS with Linux kernel v5.3.0-28
 - python-K8sclient (Python 3.8)
 - K8s-v1.21.0
@@ -48,9 +48,6 @@ pip3 install -r requirements_central_master.txt
 - Observe: We have provided some observation interfaces in the main script.
 
 
-## Version
-- v0.1 beta
-
 
 ## Notes
 - Tango architecture is developed for supporting cri-dockerd-based K8S clusters. As the container runtime for K8S is 
@@ -60,3 +57,16 @@ transitioning to containerd in the near future, we are actively expanding Tango 
 manner on servers (without frequent active migration or horizontal scaling). Therefore, Tango maintains the traffic 
 load of containerized applications based on the deployment level (the architecture maintains the Pod's ID). 
 We are expanding Tango to enable better implementation of traffic load at the service level.
+
+
+
+## Version
+- v0.1 beta
+
+
+## Citation
+If this paper can benefit your scientific publications, please kindly cite it.
+
+```
+Yicheng Feng, Shihao Shen, Mengwei Xu, Yuanming Ren, Xiaofei Wang, Victor C.M. Leung, and Wenyu Wang, "Tango: Harmonious Management and Scheduling for Mixed Services Co-located among Distributed Edge-Clouds," in ACM International Conference on Parallel Processing (ICPP), 2023.
+```
